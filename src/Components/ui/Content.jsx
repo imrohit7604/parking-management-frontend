@@ -1,53 +1,25 @@
 import { Grid } from '@material-ui/core'
-import React from 'react'
+import React,{useContext,useEffect,useState} from 'react'
 import ParkingCard from "../ui/ParkingCard";
+import {
+  Context as ParkingContext,
+} from "../../context/ParkingContext";
+import {sortByAsec} from "../../util/Util"
 const Content = () => {
-    const ob1={
-        parkingSpaceTitle:{
-                title:"A01"
-        },
-        registrationNumber:"DL56 AB 09"
-    }
-    const ob2={
-        parkingSpaceTitle:{
-                title:"A01"
-        },
-        
-    }
+
+  const { state:parkingState } = useContext(ParkingContext);
+  const [spaces,setSpaces]=useState([]);
+    useEffect(()=>{
+      setSpaces(sortByAsec(parkingState.parkingSpaces));
+    
+    },[parkingState]);
     return (
         <Grid container spacing={2}>
-     <Grid item xs={12} sm={3}>
-        <ParkingCard values={ob1}/>
+          {spaces.map(space=>(<Grid key={space.parkingSpaceId} item xs={12} sm={3}>
+        <ParkingCard  values={space}/>
        
-      </Grid>
-      <Grid item xs={12} sm={3}>
-        <ParkingCard values={ob2}/>
-       
-      </Grid>
-      <Grid item xs={12} sm={3}>
-        <ParkingCard values={ob1}/>
-       
-      </Grid>
-      <Grid item xs={12} sm={3}>
-        <ParkingCard values={ob2}/>
-       
-      </Grid>
-      <Grid item xs={12} sm={3}>
-        <ParkingCard values={ob1}/>
-       
-      </Grid>
-      <Grid item xs={12} sm={3}>
-        <ParkingCard values={ob2}/>
-       
-      </Grid>
-      <Grid item xs={12} sm={3}>
-        <ParkingCard values={ob1}/>
-       
-      </Grid>
-      <Grid item xs={12} sm={3}>
-        <ParkingCard values={ob2}/>
-       
-      </Grid>
+      </Grid>))}
+    
       </Grid>
     )
 }

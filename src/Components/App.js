@@ -6,18 +6,16 @@ import SignUp from "./ui/SignUp";
 import DashBoard from "./ui/DashBoard";
 import theme from "./ui/Theme";
   
-import {
-  Provider as AuthProvider,
-  
+import {  Provider as AuthProvider,  
 } from "../context/AuthContext";
+import {  Provider as ParkingProvider,  
+} from "../context/ParkingContext";
 
-
-function App() {
-  
-  
+function App() {  
   
   return (
     <AuthProvider>
+      <ParkingProvider>
     <ThemeProvider theme={theme}>
        <BrowserRouter>
        
@@ -32,6 +30,7 @@ function App() {
       
        </BrowserRouter>
     </ThemeProvider>
+    </ParkingProvider>
     </AuthProvider>
   
   );
