@@ -55,6 +55,7 @@ const ParkingCard = (props) => {
     const classes = useStyles();
     const {parkingSpaceTitle,registrationNumber,parkingSpaceId,parkingZoneId
       }=props.values;
+    
     const [localState,setState]=useState({registrationNumber:""
                                   ,registrationNumberError:false,
                                 error:false});
@@ -73,9 +74,8 @@ const ParkingCard = (props) => {
       const response=await releaseSpaceAndVehicle(parkingSpaceTitle.vehicleId);
       if(response.status===200)
     {await getParkingSpaces("");
-
     setOpen(false);}  
-      
+
     }
     else
     {
@@ -91,11 +91,6 @@ const ParkingCard = (props) => {
       }
       
     }
-    console.log("props",props);
-
-    //const isVaild = vaildate();
-   //const respone=await loginUser({email:localState.email,password:localState.password});
-    //console.log("response: ",respone);
   };
   const vaildate = () => {
   let isVaild=true;
@@ -109,10 +104,12 @@ const ParkingCard = (props) => {
   return isVaild;
 };
   const handleOpen = () => {
+   
     setOpen(true);
   };
 
   const handleClose = () => {
+    
     setOpen(false);
   };
     return (

@@ -142,7 +142,7 @@ const Header = (props) => {
                             </Tabs></> 
 
     useEffect(async()=>{await getUser();},[]);
-    useEffect(()=>{
+    useEffect(async()=>{
         
         //console.log("header state:",state);
        // console.log("pathname ",window.location.pathname);

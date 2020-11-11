@@ -1,7 +1,7 @@
 
 import createDataContext from "./createDataContext";
 import {
-    fetchZones,fetchSpaces,releaseVehicle,parkVehicle
+    fetchZones,fetchSpaces,releaseVehicle,parkVehicle,getParkingDetails,reset
 } from "../api/parkingApi";
 
 const parkingReducer = (state, action) => {
@@ -14,11 +14,26 @@ const parkingReducer = (state, action) => {
       return { ...state,errorMessage: "", zones:action.payload};
       case "book_space":
       return { ...state,errorMessage: ""};
+      case "reset":
+        return { ...state,errorMessage: ""};
+      case "parking_report":
+      return { ...state,errorMessage: "",report:action.payload};
       case "vehicle_release":
         return { ...state,errorMessage: ""};
     default:
       return state;
   }
+};
+
+const resetDetails = (dispatch) => {
+  return async () => {
+    const response = await reset();
+    if (response.status===200)
+      dispatch({ type: "reset",});
+      else
+      dispatch({ type: "add_error", payload: response.data.error });
+    return response;
+  };
 };
 
 const getZones = (dispatch) => {
@@ -57,7 +72,7 @@ const getParkingSpaces = (dispatch) => {
   const bookSpace = (dispatch) => {
     return async (parkingZoneId,parkingSpaceId,registrationNumber) => {
       const response = await parkVehicle(parkingZoneId,parkingSpaceId,registrationNumber);
-      console.log("parking context book",response);
+      
       if (response.status===200)
         dispatch({ type: "book_space"});
         else
@@ -66,11 +81,23 @@ const getParkingSpaces = (dispatch) => {
     };
   };
 
+  const getParkingZoneReport = (dispatch) => {
+    return async () => {
+      const response = await getParkingDetails();
+      if (response.status===200)
+        dispatch({ type: "parking_report",payload: response.data});
+        else
+        dispatch({ type: "add_error", payload: response.data.error });
+      return response;
+    };
+  };
+
 export const { Provider, Context } = createDataContext(
     parkingReducer,
-  { getZones,getParkingSpaces ,releaseSpaceAndVehicle,bookSpace},
+  { getZones,getParkingSpaces ,resetDetails,releaseSpaceAndVehicle,bookSpace,getParkingZoneReport},
   {
    zones:[],
-   parkingSpaces:[]
+   parkingSpaces:[],
+   report:[],
   }
 );

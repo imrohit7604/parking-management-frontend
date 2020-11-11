@@ -53,9 +53,30 @@ export const fetchSpaces = async (parkingZoneId) => {
     return response;
   };
 
+  export const getParkingDetails = async () => {
+  
+    const jsonToken = await localStorage.getItem("jsonToken");
+    let response;
+    await axios
+      .get("http://localhost:3002/api/vehicleParking/parkingDetails",{
+        headers: {
+          "x-auth-token": jsonToken,
+        },
+      }).then(res=>response=res).catch(err=>response=err.response);;
+    return response;
+  };
 
-
-
+  export const reset = async () => {
+    const jsonToken = await localStorage.getItem("jsonToken");
+    let response;
+    await axios
+      .get("http://localhost:3002/api/vehicleParking/reset",{
+        headers: {
+          "x-auth-token": jsonToken,
+        },
+      }).then(res=>response=res).catch(err=>response=err.response);;
+    return response;
+  };
 
 
 
