@@ -19,9 +19,9 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://github.com/imrohit7604/">
+      
         Rohit
-      </Link>{' '}
+      {' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
@@ -34,7 +34,9 @@ const useStyles = makeStyles((theme) => ({
   },
   error:{
     color:"red",
-    
+  },
+  success:{
+    color:"green",
   },
   image: {
     backgroundImage: 'url(https://source.unsplash.com/random)',
@@ -69,22 +71,32 @@ export default function SignIn(props) {
   const [localState, setState] = useState({
     email: "",
     password: "",
-    emailError: "",
-    passwordError: "",
+    emailError: false,
+    passwordError: false,
+    signInError:"",
+    signInSuccess:""
   });
   const handelChange = (event) => {
     setState({
       ...localState,
       [event.target.id]: event.target.value,
-      emailError: null,
-      passwordError: null,
+      emailError: false,
+      passwordError: false,
     });
   };
   const handelSubmit = async(event) => {
     event.preventDefault();
     const isVaild = vaildate();
-   const respone=await signIn({email:localState.email,password:localState.password});
-    await getUser();
+    if(isVaild)
+   {const respone=await signIn({email:localState.email,password:localState.password});
+   if(respone.status===200) 
+    {
+      setState({...localState,signInError:"",signInSuccess:"Login Successfully :)"});
+      await getUser();
+    } 
+   else
+   setState({...localState,signInSuccess:"",signInError:"InVaild Email and Password :("});
+   }
   };
   const vaildate = () => {
       
@@ -95,17 +107,17 @@ export default function SignIn(props) {
     if (!localState.email.includes("@") && !localState.password.length > 0) {
       setState({
         ...localState,
-        passwordError: "Enter password",
-        emailError: "Enter vaild email",
+        passwordError: true,
+        emailError: true,
       });
     } else if (!localState.email.includes("@")) {
-      setState({ ...localState, emailError: "Enter vaild email" });
+      setState({ ...localState, emailError: true });
     } else if (!localState.password.length > 0) {
-      setState({ ...localState, passwordError: "Enter password" });
+      setState({ ...localState, passwordError: true });
     }
     return false;
   };
-  useEffect(()=>{console.log("state",state)},[state])
+  useEffect(()=>{},[state])
   if (state.user) 
      return <Redirect to={"/dashboard"} />
     else
@@ -137,6 +149,9 @@ export default function SignIn(props) {
               value={localState.email}
               onChange={handelChange}
             />
+            <Typography className={classes.error} variant="overline" display="block" gutterBottom>
+            {localState.emailError&&"Enter vaild email!"}
+          </Typography>
             <TextField
               variant="outlined"
               margin="normal"
@@ -151,7 +166,9 @@ export default function SignIn(props) {
               value={localState.password}
               onChange={handelChange}
             />
-           
+               <Typography className={classes.error} variant="overline" display="block" gutterBottom>
+            {localState.passwordError&&"Enter password!"}
+          </Typography>
             <Button
               type="submit"
               fullWidth
@@ -162,12 +179,14 @@ export default function SignIn(props) {
             >
               Sign In
             </Button>
-            <Typography className={classes.error} component="h5" variant="h5">
-            {localState.emailError&&localState.emailError}
+            <Typography className={classes.success} variant="overline" display="block" gutterBottom>
+            {localState.signUpSuccess&&localState.signUpSuccess}
           </Typography>
-          <Typography  className={classes.error} component="h5" variant="h5">
-            {localState.passwordError&&localState.passwordError}
+            <Typography className={classes.error} variant="overline" display="block" gutterBottom>
+            {localState.signInError&&localState.signInError}
           </Typography>
+      
+          
             <Grid container>
               
               <Grid item>

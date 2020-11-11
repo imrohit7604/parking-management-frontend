@@ -98,7 +98,7 @@ const ParkingCard = (props) => {
               {registrationNumber?"Occupied":"Vacant"}
             </Typography>
            <Typography variant="body2" color="textSecondary" component="p">
-              {registrationNumber?registrationNumber:"Registation Number"}
+              {registrationNumber?registrationNumber:"Vehicle Registation Number"}
             </Typography>
             <CardActions style={{justifyContent: 'center'}}>
             <Button variant="contained"  color="primary" disabled={state.user&&!state.user.typeOfUser} onClick={handleOpen} >           

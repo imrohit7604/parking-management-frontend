@@ -1,5 +1,5 @@
 import React,{useEffect, useState,useContext} from 'react'
-import { AppBar, Tabs, Toolbar,Tab, Button,Typography, useTheme, Avatar} from '@material-ui/core'
+import { AppBar, Tabs, Toolbar,Tab, Button,Typography,  Avatar} from '@material-ui/core'
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import { makeStyles } from '@material-ui/styles';
 import { Link } from 'react-router-dom';
@@ -79,10 +79,10 @@ function ElevationScroll(props) {
   }))
 
 const Header = (props) => {
-    const { state ,logOut} = useContext(AuthContext);
+    const { state ,logOut,getUser} = useContext(AuthContext);
     const classes=useStyles();
     const [value,setValue]=useState(0);
-   const theme=useTheme();
+   
 
     const handleChange=(e,value)=>{
         setValue(value);
@@ -140,8 +140,11 @@ const Header = (props) => {
                                 />
                               
                             </Tabs></> 
+
+    useEffect(async()=>{await getUser();},[]);
     useEffect(()=>{
-        console.log("header state:",state);
+        
+        //console.log("header state:",state);
        // console.log("pathname ",window.location.pathname);
        if(state.user)
        {

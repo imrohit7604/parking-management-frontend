@@ -1,25 +1,28 @@
-import React ,{useState}from 'react';
+import React ,{useState,useContext}from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 
-import { Link } from 'react-router-dom';
+import { Link,Redirect } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import {signUpUser} from "../../api/authApi";
-import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+
+import { FormControl, InputLabel,  Select } from '@material-ui/core';
+import {
+  Context as AuthContext,
+} from "../../context/AuthContext";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://github.com/imrohit7604/">
+      
         Rohit
-      </Link>{' '}
+      {' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
@@ -29,6 +32,12 @@ function Copyright() {
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
+  },
+  error:{
+    color:"red",
+  },
+  success:{
+    color:"green",
   },
   formControl: {
     margin: theme.spacing(1),
@@ -63,34 +72,46 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
+  const { state, signUp } = useContext(AuthContext);
   const classes = useStyles();
   const [localState, setState] = useState({
     name:"",
     email: "",
     password: "",
-    nameError:"",
-    emailError: "",
-    passwordError: "",
-    typeOfUser:null,
-    typeOfUserError:null
+    nameError:false,
+    typeOfUser:"",
+    emailError: false,
+    passwordError: false,    
+    typeOfUserError:false,
+    signUpSuccess:"",
+    signUpError:"",
   });
-  const [open, setOpen] = React.useState(false);
+  
   const handleChange = (event) => {
     setState({
       ...localState,
       [event.target.id]: event.target.value,
-      emailError: null,
-      passwordError: null,
-      typeOfUserError:null,
+      nameError:false,
+      emailError: false,
+      passwordError: false,
+      typeOfUserError:false,
     });
   };
   const handelSubmit = async(event) => {
     event.preventDefault();
     const isVaild = vaildate();
-  // const respone=await signUpUser({email:localState.email,password:localState.password});
-    //console.log("response: ",respone);
-    console.log("local state ",localState);
-    console.log("isVaild",isVaild);
+    if(isVaild)
+    {
+      const response=await signUp({name:localState.name,email:localState.email,password:localState.password,typeOfUser:localState.typeOfUser==="true"?true:false});
+      if (response.status===200)
+      setState({...localState,signUpError:"",signUpSuccess:"Registred Successfully :)"});
+      else
+      setState({...localState,signUpSuccess:"",signUpError:"Already Registred"});
+      console.log("response: ",response);
+      console.log("local state ",localState);
+    }
+   
+    
   };
   
   const vaildate = () => {
@@ -104,35 +125,34 @@ export default function SignUp() {
         isVaild = false;
         setState((newValue) => ({
           ...newValue,
-          nameError: "Enter Valid Name",
+          nameError:true
         }));
       } else {
-        setState((newValue) => ({ ...newValue, nameError: "" }));
+        setState((newValue) => ({ ...newValue, nameError: false }));
       }
       
       if (!localState.email.includes("@")) {
         isVaild = false;
         setState((newValue) => ({
           ...newValue,
-          emailError: "Enter vaild email address",
+          emailError: true,
         }));
       } else {
         setState((newValue) => ({
           ...newValue,
-          emailError: "",
+          emailError: false,
         }));
       }
       if (!localState.password.match(passw)) {
         isVaild = false;
         setState((newValue) => ({
           ...newValue,
-          passwordError:
-            "Password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter",
+          passwordError:true
         }));
       } else {
         setState((newValue) => ({
           ...newValue,
-          passwordError: "",
+          passwordError: false,
         }));
       }     
       
@@ -140,17 +160,20 @@ export default function SignUp() {
         isVaild = false;
         setState((newValue) => ({
           ...newValue,
-          typeOfUserError: "Select type of user you are!!",
+          typeOfUserError: true,
         }));
       } else {
         setState((newValue) => ({
           ...newValue,          
-          typeOfUserError: "",
+          typeOfUserError: false
         }));
       }
       return isVaild;
   };
-
+  if (state.user) 
+  return <Redirect to={"/dashboard"} />
+ else
+ {
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -177,6 +200,9 @@ export default function SignUp() {
               onChange={handleChange}
               autoFocus
             />
+              <Typography className={classes.error} variant="overline" display="block" gutterBottom>
+            {localState.nameError&&"Enter vaild name!"}
+          </Typography>
             <TextField
               variant="outlined"
               margin="normal"
@@ -190,6 +216,9 @@ export default function SignUp() {
               value={localState.email}
               onChange={handleChange}
             />
+             <Typography className={classes.error} variant="overline" display="block" gutterBottom>
+            {localState.emailError&&"Enter vaild email!"}
+          </Typography>
             <TextField
               variant="outlined"
               margin="normal"
@@ -204,6 +233,9 @@ export default function SignUp() {
               onChange={handleChange}
               autoComplete="current-password"
             />
+             <Typography className={classes.error} variant="overline" display="block" gutterBottom>
+          {localState.passwordError&&"Password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter"}
+          </Typography>
             <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel htmlFor="typeOfUser">Type Of User</InputLabel>
         <Select
@@ -223,7 +255,11 @@ export default function SignUp() {
           <option value={false}>Parking Zone Assistant</option>
           
         </Select>
+        
       </FormControl>
+      <Typography className={classes.error} variant="overline" display="block" gutterBottom>
+            {localState.typeOfUserError&&"Select type of user you are!"}
+          </Typography>
             <Button
               type="submit"
               fullWidth
@@ -234,6 +270,15 @@ export default function SignUp() {
             >
               Sign Up
             </Button>
+            <Typography className={classes.success} variant="overline" display="block" gutterBottom>
+            {localState.signUpSuccess&&localState.signUpSuccess}
+          </Typography>
+            <Typography className={classes.error} variant="overline" display="block" gutterBottom>
+            {localState.signUpError&&localState.signUpError}
+          </Typography>
+           
+         
+         
             <Grid container>
               <Grid item xs>
               
@@ -252,4 +297,5 @@ export default function SignUp() {
       </Grid>
     </Grid>
   );
+        }
 }

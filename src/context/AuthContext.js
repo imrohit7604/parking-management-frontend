@@ -30,26 +30,24 @@ const authReducer = (state, action) => {
 
 const getUser = (dispatch) => {
   return async () => {
+    const jsonToken = await localStorage.getItem("jsonToken");
+    
+        if(jsonToken==null) return;
     const response = await fetchUser();
-    console.log("authContext fetchUser: ",response);
+    
     if (response.status===200)
       dispatch({ type: "get_user", payload: response.data});
-    else
-      dispatch({ type: "add_error", payload: response.error });
+   
     return response;
   };
 };
 
 const signUp = (dispatch) => {
-  return async ({ name, email, password }) => {
-    const response = await signUpUser({
-      name,
-      email,
-      password,
-    });
-    if (response.message) dispatch({ type: "sign_up", payload: email });
-    if (response.error)
-      dispatch({ type: "add_error", payload: response.error });
+  return async (cred) => {
+    const response = await signUpUser(cred);
+    if (response.status===200) dispatch({ type: "sign_up" });
+   else
+      dispatch({ type: "add_error", payload: response.data.error });
     return response;
   };
 };
@@ -57,7 +55,7 @@ const signUp = (dispatch) => {
 const signIn = (dispatch) => {
   return async (cred) => {
     const response = await loginUser(cred);
-    //console.log("authContext: ",response)
+    console.log("authContext: ",response)
     if (response.status===200) {
       localStorage.setItem("jsonToken",response.data.token);
       //console.log("jsontoken",localStorage.getItem("jsonToken"));
@@ -73,6 +71,7 @@ const signIn = (dispatch) => {
 
 const logOut = (dispatch) => {
   return  ()=> {   
+    localStorage.removeItem("jsonToken");
     dispatch({ type: "sign_out" });
   };
 };
