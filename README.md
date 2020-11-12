@@ -1,70 +1,38 @@
-# Getting Started with Create React App
+# Parking Management Frontend
+This is the frontend of Parking Management Website which is written in React.js. As name explains it helps in management of Car parking through which Booking Counter Agent or Parking Zone Assistant can manage/look into the vacant parking space or occupied space with the car registration number.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Requirements
+1) React v17.0.1
 
-## Available Scripts
+## Installation
+1. Open the CMD from the folder where you project is saved
+2. Write `npm install` and press the Enter.
 
-In the project directory, you can run:
+## Operating Instructions
+1. Open the CMD from the folder where you project is saved
+2. Write `npm start` and press the Enter.
 
-### `npm start`
+## Usage
+### 1. SignUp
+   This will be used to signUp to the website by providing the Email-id, Password and type of user.
+      
+### 2. SignIn 
+   This will be used to signin to the website by providing the Valid Email-id and Password.
+   
+### 3. Dashboard
+   Dashboard will show the Parking space in the ascending order filtered by to the Parking Zone.
+   For each parking space it will show the vehicle registration number for occupied space with Grey colour.
+   also will give an option to release the car if the user is of type Booking Counter Agent.
+   Parking space will be Green if it is vacant.
+   Parking Zone Assistant will not have any rights to manipulate the data he/she will be having Read Only rights.
+   
+### 4. Reset All
+   Reset All button will release all the cars by assigning the release_date_time as current time.But the car record will be present in our database with all the details to get a better Reports.
+   
+### 5. Report
+  This will generate a Report based on the Date selected and the Data presented in the data base for that particular day.
+   
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Maintainer
+Rohit: https://github.com/imrohit7604/
