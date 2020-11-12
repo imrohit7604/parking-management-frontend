@@ -82,8 +82,8 @@ const getParkingSpaces = (dispatch) => {
   };
 
   const getParkingZoneReport = (dispatch) => {
-    return async () => {
-      const response = await getParkingDetails();
+    return async (date) => {
+      const response = await getParkingDetails(date);
       if (response.status===200)
         dispatch({ type: "parking_report",payload: response.data});
         else

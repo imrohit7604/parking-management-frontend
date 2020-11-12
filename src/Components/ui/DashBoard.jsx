@@ -5,7 +5,12 @@ import { Redirect} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 import {
   Context as AuthContext,
 } from "../../context/AuthContext";
@@ -67,8 +72,13 @@ const DashBoard = () => {
   const classes = useStyles();
   const [zoneSelect,setZone]=useState({_id:""});
   const [anchorEl, setAnchorEl] =useState(null);
-  
   const [dailogOpen, setDailogOpen] = useState(false);
+  const [selectedDate, setSelectedDate] =useState(new Date());
+
+  const handleDateChange =async (date) => {
+   await getParkingZoneReport(date);
+    setSelectedDate(date);
+  };
   
   const handleReset=async()=>{
     await resetDetails();
@@ -89,12 +99,18 @@ const DashBoard = () => {
        getParkingSpaces(zone._id);}
     setAnchorEl(null);
   };
+  const check=()=>{
+    console.log("zone select",zoneSelect);
+    console.log("date",selectedDate);
+  }
   useEffect(()=>{ 
     const interval = setInterval(() => {      
       getParkingSpaces(zoneSelect._id);
-      getParkingZoneReport();}, 10000);
+      check();
+     // getParkingZoneReport(selectedDate);
+    }, 10000);
     getZones();
-    getParkingZoneReport();
+    getParkingZoneReport(selectedDate);
     getParkingSpaces("");
     return () => {
       clearInterval(interval);
@@ -106,7 +122,7 @@ const DashBoard = () => {
     else
     {
     return (<>
-        <Grid container  spacing={2} m>
+        <Grid container  spacing={2} >
         
         <Grid item xs={false} sm={1} />
         <Grid item xs={12} sm={7}>
@@ -115,9 +131,11 @@ const DashBoard = () => {
         {authState.user&&authState.user.typeOfUser?"Booking Counter Agent":"Parking Zone Assistant"} / DashBoard
       </Typography>
       
- 
+      {authState.user.typeOfUser&&<Button  className={classes.sortButton} aria-controls="simple-menu" aria-haspopup="true" onClick={()=>setDailogOpen(true)}>
+       Reset
+      </Button>}
         <Button  className={classes.sortButton} aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-       Sort By 
+       Filter By Zones 
       </Button>
      
       
@@ -140,6 +158,24 @@ const DashBoard = () => {
         <Grid item xs={12} sm={4}>
         <Grid container>
           <Typography className={classes.reportHeader} variant="h3">Parking Zone Report</Typography>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Grid container justify="space-around">
+        
+        <KeyboardDatePicker
+          margin="normal"
+          id="date-picker-dialog"
+          label="Report Date"
+          format="MM/dd/yyyy"
+          maxDate={new Date()}
+          value={selectedDate}
+          onChange={handleDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+       
+      </Grid>
+    </MuiPickersUtilsProvider>
         {parkingState.report.map((zone)=>(<> 
         <Accordion key={zone.title}>
         <AccordionSummary
@@ -156,7 +192,7 @@ const DashBoard = () => {
           <TableRow>
             <TableCell>Parking Space</TableCell>
             <TableCell align="right">No of Booking</TableCell>
-            <TableCell align="right">No of Vehicle Parked(0/1)</TableCell>
+            <TableCell align="right">Current vehicle Parked(0/1)</TableCell>
            
           </TableRow>
         </TableHead>

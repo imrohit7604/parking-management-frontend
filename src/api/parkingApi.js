@@ -53,12 +53,19 @@ export const fetchSpaces = async (parkingZoneId) => {
     return response;
   };
 
-  export const getParkingDetails = async () => {
+  export const getParkingDetails = async (date) => {
   
     const jsonToken = await localStorage.getItem("jsonToken");
     let response;
     await axios
-      .get("http://localhost:3002/api/vehicleParking/parkingDetails",{
+      .post("http://localhost:3002/api/vehicleParking/parkingDetails",{
+        date:{
+          day:date.getDate(),
+        month:date.getMonth(),
+        year:date.getFullYear()
+        }
+        
+      },{
         headers: {
           "x-auth-token": jsonToken,
         },

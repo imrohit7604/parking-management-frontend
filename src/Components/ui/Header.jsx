@@ -94,12 +94,7 @@ const Header = (props) => {
                 className={classes.tabContainer}
                 indicatorColor="secondary"
                 >
-                    <Tab 
-                    className={classes.tab} 
-                    label="Home"
-                    component={Link}
-                    to="/"
-                    />
+                    
                     <Tab 
                     className={classes.tab} 
                     label="DashBoard"
@@ -119,12 +114,7 @@ const Header = (props) => {
                             className={classes.tabContainer}
                             indicatorColor="secondary"
                             >
-                                <Tab 
-                                className={classes.tab} 
-                                label="Home"
-                                component={Link}
-                                to="/"
-                                />
+                                
                                
                                  <Tab 
                                 className={classes.tab} 
@@ -150,16 +140,12 @@ const Header = (props) => {
        {
         
         switch(window.location.pathname)
-        {            case "/": 
-                    if(value!==0){
-                        setValue(0);
-                    }
-                    break;
+        {            
             
             
                         case "/dashboard": 
-                        if(value!==1){
-                            setValue(1);
+                        if(value!==0){
+                            setValue(0);
                         }
                         break;
             
@@ -168,23 +154,18 @@ const Header = (props) => {
        else
        {
         switch(window.location.pathname)
-        {            case "/": 
-                    if(value!==0){
-                        setValue(0);
-                    }
-                    break;
+        {           
             
             case "/signin": 
-                        if(value!==1){
-                            setValue(1);
+                        if(value!==0){
+                            setValue(0);
                         }
                         break;
             case "/signup": 
-                        if(value!==2){
-                            setValue(2);
+                        if(value!==1){
+                            setValue(1);
                         }
-                        break;
-                       
+                        break;                       
             
         } 
        }
@@ -194,11 +175,11 @@ const Header = (props) => {
         <ElevationScroll>
         <AppBar position="fixed"  > 
             <Toolbar disableGutters>
-                <Button disableRipple component={Link} to="/" className={classes.logoConatiner} onClick={()=>setValue(0)}>
+               
                 <Typography  className={classes.logo}>
                     Parking Management
                 </Typography>
-                </Button>             
+                         
                 {state.user?SingInTabs:SingOutTabs}
             </Toolbar>
         </AppBar>
