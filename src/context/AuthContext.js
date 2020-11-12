@@ -1,11 +1,5 @@
-
 import createDataContext from "./createDataContext";
-import {
-signUpUser,
-  loginUser,
-  fetchUser,
-  
-} from "../api/authApi";
+import { signUpUser, loginUser, fetchUser } from "../api/authApi";
 
 const authReducer = (state, action) => {
   switch (action.type) {
@@ -15,7 +9,7 @@ const authReducer = (state, action) => {
       return { ...state, user: action.payload };
     case "sign_up":
       return { errorMessage: "" };
-    
+
     case "sign_in":
       return {
         ...state,
@@ -31,13 +25,13 @@ const authReducer = (state, action) => {
 const getUser = (dispatch) => {
   return async () => {
     const jsonToken = await localStorage.getItem("jsonToken");
-    
-        if(jsonToken==null) return;
+
+    if (jsonToken == null) return;
     const response = await fetchUser();
-    
-    if (response.status===200)
-      dispatch({ type: "get_user", payload: response.data});
-   
+
+    if (response.status === 200)
+      dispatch({ type: "get_user", payload: response.data });
+
     return response;
   };
 };
@@ -45,9 +39,8 @@ const getUser = (dispatch) => {
 const signUp = (dispatch) => {
   return async (cred) => {
     const response = await signUpUser(cred);
-    if (response.status===200) dispatch({ type: "sign_up" });
-   else
-      dispatch({ type: "add_error", payload: response.data.error });
+    if (response.status === 200) dispatch({ type: "sign_up" });
+    else dispatch({ type: "add_error", payload: response.data.error });
     return response;
   };
 };
@@ -55,28 +48,23 @@ const signUp = (dispatch) => {
 const signIn = (dispatch) => {
   return async (cred) => {
     const response = await loginUser(cred);
-    console.log("authContext: ",response)
-    if (response.status===200) {
-      localStorage.setItem("jsonToken",response.data.token);
+    console.log("authContext: ", response);
+    if (response.status === 200) {
+      localStorage.setItem("jsonToken", response.data.token);
       //console.log("jsontoken",localStorage.getItem("jsonToken"));
-     //await getUser(dispatch);
+      //await getUser(dispatch);
       dispatch({ type: "sign_in" });
-    }
-    else
-      dispatch({ type: "add_error", payload: response.data.error });
+    } else dispatch({ type: "add_error", payload: response.data.error });
     return response;
   };
 };
 
-
 const logOut = (dispatch) => {
-  return  ()=> {   
+  return () => {
     localStorage.removeItem("jsonToken");
     dispatch({ type: "sign_out" });
   };
 };
-
-
 
 export const { Provider, Context } = createDataContext(
   authReducer,
